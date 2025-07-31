@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lista de Libros</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h2>Libros</h2>
+  <div class="container-links">
+    <a href="agregar.html">Agregar libro</a>
+    <a href="logout.html">Cerrar sesion</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Título</th>
+        <th>Autor</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="libros-tbody">
+    
+    </tbody>
+  </table>
+
+  <script>
+    function cargarLibros() {
+      const tbody = document.getElementById('libros-tbody');
+      const libros = JSON.parse(localStorage.getItem('libros')) || [];
+
+      tbody.innerHTML = ''; 
+
+      if (libros.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" style="text-align: center;">No hay libros agregados</td>
+          </tr>
+        `;
+        return;
+      }
+
+      libros.forEach((libro, index) => {
+        tbody.innerHTML += `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${libro.title}</td>
+            <td>${libro.author}</td>
+            <td>
+              <a href="editar.html?id=${index}">Editar</a>
+              <a href="#" data-id="${index}" class="eliminar">Eliminar</a>
+            </td>
+          </tr>
+        `;
+      });
+
+      
+      document.querySelectorAll('.eliminar').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const id = this.getAttribute('data-id');
+          if (confirm('¿Estas seguro de eliminar este libro?')) {
+            eliminarLibro(id);
+          }
+        });
+      });
+    }
+
+    function eliminarLibro(id) {
+      let libros = JSON.parse(localStorage.getItem('libros')) || [];
+      libros.splice(id, 1); 
+      localStorage.setItem('libros', JSON.stringify(libros));
+      cargarLibros(); 
+    }
+
+    window.onload = cargarLibros;
+  </script>
+</body>
+</html>
