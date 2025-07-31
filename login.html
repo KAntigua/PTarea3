@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h2>Login Admin</h2>
+  <form onsubmit="return validarLogin(event)">
+    <input type="text" id="username" placeholder="Usuario" required>
+    <input type="password" id="password" placeholder="Contraseña" required>
+    <button type="submit">Entrar</button>
+  </form>
+
+  <script>
+    const usuariosFalsos = [
+      { usuario: "admin", contraseña: "1234" },
+      
+    ];
+
+    function validarLogin(event) {
+      event.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+
+      const encontrado = usuariosFalsos.find(u => u.usuario === user && u.contraseña === pass);
+
+      if (encontrado) {
+        localStorage.setItem("usuarioActivo", user); 
+        window.location.href = "index.html"; 
+      } else {
+        alert("Usuario o contraseña incorrecta");
+      }
+      return false;
+    }
+  </script>
+</body>
+</html>
